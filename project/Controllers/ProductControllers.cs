@@ -17,7 +17,7 @@ namespace project.Controllers
         }
 
 
-        // GetTest
+        // GETTest
         [HttpGet]
         [Route("gettest")]
         public IActionResult GetTest()
