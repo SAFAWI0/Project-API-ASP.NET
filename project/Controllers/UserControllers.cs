@@ -61,7 +61,7 @@ public class UserControllers : Controller
     // post
     [HttpPost]
     [Route("addusers")]
-    public IActionResult AddUsers ([FromBody]UserDTO userDTO)
+    public async Task<IActionResult> AddUsers([FromBody]UserDTO userDTO)
     {
         var user = new User
         {
@@ -69,8 +69,8 @@ public class UserControllers : Controller
             Email = userDTO.Email,
             Password = userDTO.Password,
         };
-        _context.Users.Add(user);   
-        _context.SaveChanges();
+         _context.Users.Add(user);   
+       await _context.SaveChangesAsync();
         var result = new
         {
             Message= "User Created Succesfully !",
