@@ -1,13 +1,15 @@
-﻿
-
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using project.DTOs;
 using project.Interfaces;
 using project.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace project.Services
 {
-    public class AuthService :IAuthService
+    public class AuthService : IAuthService
     {
         private readonly UserManager<User> _userManager;
 
@@ -15,15 +17,17 @@ namespace project.Services
         {
             _userManager = userManager;
         }
+
         public async Task<UserResponse> Registration(RegistrationDTO user)
         {
-            var IdentityUser = new User
+            var identityUser = new User
             {
                 UserName = user.UserName,
+                Name = user.Name,
                 Email = user.Email,
-                Name = user.UserName,
+                PhoneNumber = user.PhoneNumber,
             };
-            var result = await _userManager.CreateAsync(IdentityUser, user.Password);
+            var result = await _userManager.CreateAsync(identityUser, user.Password);
 
             if (result.Succeeded)
             {
@@ -32,9 +36,8 @@ namespace project.Services
                     Message = "User Created",
                     Success = true,
                 };
-
-
             }
+
             return new UserResponse
             {
                 Message = "User not Created",
@@ -42,5 +45,33 @@ namespace project.Services
                 Errors = result.Errors.Select(e => e.Description),
             };
         }
+
+        public async Task<IEnumerable<User>> GetAllUsers()
+        {
+            return await _userManager.Users.ToListAsync(); // Fetch all users
+        }
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
